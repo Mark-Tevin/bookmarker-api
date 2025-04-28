@@ -1,4 +1,4 @@
-from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
+from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED, HTTP_200_OK, HTTP_401_UNAUTHORIZED
 from flask import Blueprint, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 import validators
@@ -71,7 +71,7 @@ def login():
                     'username': user.username,
                     'email': user.email,     
                 }
-            })
+            }), HTTP_200_OK
     return jsonify({'error':'Wrong credentials'}), HTTP_401_UNAUTHORIZED
             
 
