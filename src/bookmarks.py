@@ -9,5 +9,5 @@ def get_all():
 
 
 @bookmarks.get("/me")
-def me():
+def me():   
     return {"user": "me"}

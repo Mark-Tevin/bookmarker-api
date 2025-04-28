@@ -2,7 +2,7 @@ from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFL
 from flask import Blueprint, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 import validators
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token
 
 from src.database import User, db
 
@@ -77,5 +77,6 @@ def login():
 
 
 @auth.get("/me")
+@jwt_required()
 def me():
     return {"user": "me"}
