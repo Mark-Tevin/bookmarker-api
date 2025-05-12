@@ -1,5 +1,6 @@
+
 from flask_jwt_extended.view_decorators import jwt_required
-from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED, HTTP_200_OK
+from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED, HTTP_200_OK, HTTP_404_NOT_FOUND
 from flask import Blueprint, request
 from flask.json import jsonify
 import validators
@@ -76,3 +77,24 @@ def handle_bookmarks():
         }
         
         return jsonify({'data': data, "meta": meta}), HTTP_200_OK
+
+@bookmarks.get("/<int:id>")
+@jwt_required()
+def get_bookmark(id):
+    current_user = get_jwt_identity()
+    
+    bookmark = Bookmark.query.filter_by(user_id = current_user, id=id).first()
+    
+    if not bookmark:
+        return jsonify({'message': 'Item not found'}), HTTP_404_NOT_FOUND
+    
+    return jsonify({
+        'id': bookmark.id,
+        'url': bookmark.url,
+        'short_url': bookmark.short_url,
+        'visit': bookmark.visits,
+        'body': bookmark.body,
+        'created_at': bookmark.created_at,
+        'updated_at': bookmark.updated_at,
+    }), HTTP_200_OK
+    
