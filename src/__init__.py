@@ -1,4 +1,6 @@
+from flask.json import jsonify
 from flask import Flask, redirect
+from src.constants.http_status_codes import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 import os
 from src.auth import auth
 from src.bookmarks import bookmarks
@@ -37,5 +39,12 @@ def create_app(test_config=None):
             
             return redirect(bookmark.url)
         
+    @app.errorhandler(HTTP_404_NOT_FOUND)
+    def handle_404(e):
+        return jsonify({'error': 'Not Found'}), HTTP_404_NOT_FOUND
     
+    @app.errorhandler(HTTP_500_INTERNAL_SERVER_ERROR)
+    def handle_500():
+        return jsonify({'error': 'Something went wrong, we are sorting it out'}), HTTP_500_INTERNAL_SERVER_ERROR
+     
     return app
